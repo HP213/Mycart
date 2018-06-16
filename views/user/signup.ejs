@@ -1,0 +1,30 @@
+<% include ../partials/header %>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <h1>Sign Up</h1>
+    <!-- Validation Errors -->
+    <% if(hasError){%>
+      <div class="alert alert-danger">
+        <% for(message of messages){%>
+          <p><%-message%></p>
+        <%}%>
+      </div>
+    <%}%>
+    <form action="/user/signup" method="post">
+      <div class="form-group">
+      <label for="email">E-Mail</label>
+      <input type="email" id="email" name="email" placeholder="E-MAIL" class="form-control">
+      </div>
+      <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="PASSWORD" class="form-control">
+      </div>
+      <input type="hidden" name="_csrf" value="<%-csrfToken%>">
+      <button type="submit" class = 'btn btn-primary' name="button">Sign Up</button>
+    </form>
+    <!-- <%-csrfToken%> -->
+  </div>
+</div>
+
+<% include ../partials/footer %>

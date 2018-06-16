@@ -1,0 +1,27 @@
+<% include ./partials/header %>
+
+
+
+
+
+<div class="container">
+  <!-- <div class="row"> -->
+  <%for(product of products){%>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img  class = 'img-responsive' src="<%-product.imagePath%>" alt="...">
+        <div class="caption">
+          <h3><%-product.title%></h3>
+          <p class = 'description'><%-product.description%></p>
+          <div class = 'clearfix'>
+            <div class = "price pull-left"><%-product.price%>Rs</div>
+            <a href="/addtocart/<%=product._id%>" class="btn btn-success pull-right" role="button">Add To Cart</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <%}%>
+</div>
+
+<% include ./partials/footer %>
