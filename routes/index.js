@@ -21,7 +21,9 @@ router.get('/addtocart', function(req, res){
     return res.render('cart', {products : null});
   }
   var cart = new Cart(req.session.cart);
-  res.render('cart', {products : cart.generateArray(), totalPrice: cart.totalPrice});
+  var successMsg = req.flash('success')[0];
+  var errorMsg = req.flash('error')[0];
+  res.render('cart', {products : cart.generateArray(), totalPrice: cart.totalPrice, successMsg : successMsg, errorMsg : errorMsg, noMessage : !successMsg, noerrorMessage : !errorMsg});
 });
 
 router.get('/addtocart/:id', function(req, res){
@@ -42,7 +44,35 @@ router.get('/addtocart/:id', function(req, res){
   });
 });
 
-router.get('/checkout', function(req, res, next){
+// router.get('/reduce/:id', function(req, res, next){
+//   var productId = req.params.id;
+//   var cart = new Cart(req.session.cart ? req.session.cart : {items : {}});
+//
+//   cart.reduceOne(productId);
+//   req.session.cart = cart;
+//   res.redirect('/addtocart');
+// })
+
+router.get('/change/:id',function(req,res){
+  if(req.query.change < 0){
+    req.flash('error',"Value Cannot Be Negetive")
+    res.redirect('/addtocart')
+  }else{
+    cart = new Cart(req.session.cart);
+    cart.change(req.params.id,req.query.change);
+    req.session.cart = cart;
+    res.redirect('/addtocart');
+  }
+})
+router.get('/delete/:id',function(req,res){
+  cart = new Cart(req.session.cart);
+  cart.remove(req.params.id)
+  req.session.cart = cart;
+  req.flash('success',"Item Remove Successfully From The Cart")
+  res.redirect('/addtocart');
+})
+
+router.get('/checkout',isLoggedIn, function(req, res, next){
   if(!req.session.cart){
     return res.redirect('/addtocart');
   }
@@ -79,7 +109,7 @@ router.get('/checkout', function(req, res, next){
 //
 // })
 
-router.post('/checkout', function(req, res){
+router.post('/checkout',isLoggedIn, function(req, res){
   var token = req.body.stripeToken;
   console.log(token);
   var chargeAmount = req.body.chargeAmount;
@@ -112,3 +142,12 @@ router.post('/checkout', function(req, res){
 
 
 module.exports = router;
+
+
+function isLoggedIn(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  }
+  req.session.oldUrl = req.url;
+  res.redirect('/user/signin');
+};

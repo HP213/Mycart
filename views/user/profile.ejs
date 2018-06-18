@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <h1>User Profile</h1>
+    <hr>
+    <h2>My Orders</h2>
+      <%for(order of orders){%>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <ul class="list-group">
+                <%for(eachOrder of order.item){%>
+                  <li class="list-group-item">
+                    <span class="badge"><%-eachOrder.price%></span>
+                    <%-eachOrder.item.title%> | <%-eachOrder.qty%>
+                  </li>
+                <%}%>
+
+
+            </ul>
+          </div>
+          <div class="panel-footer">Total Price :  ₹<%-order.cart.totalPrice%></div>
+        </div>
+      <%}%>
+  </div>
+</div>
+
+<% include ../partials/footer %>

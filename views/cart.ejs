@@ -1,53 +1,98 @@
 <% include ./partials/header %>
-<%if(products){%>
-  <%for(product of products){%>
+
+
+<%if(session.cart.totalQty){%>
+  <div class="container">
     <div class="row">
-      <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-        <li class="list-group-item">
-          <div class="badge"><%-product.qty%></div>
-          <strong><%-product.item.title%></strong>
-          <div class="label label-success"><%-product.price%></div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" name="button" data-toggle = 'dropdown'>Action <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Reduce by 1</a></li>
-              <li><a href="#">Remove all</a></li>
-            </ul>
+
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+          <div id="charge-error" class="alert alert-danger <%if(noerrorMessage){%> hidden <%}%>">
+          <%-errorMsg%>
           </div>
-        </li>
-      </div>
+          <div id="charge-error" class="alert alert-success <%if(noMessage){%> hidden <%}%>">
+          <%-successMsg%>
+          </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th> </th>
+                        <th class="text-center">Price</th>
+                        <th class="text-center">Total</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <%for(product of products){%>
+                    <tr>
+                      <%if(product.qty){%>
+
+
+                        <td class="col-sm-8 col-md-6">
+                        <div class="media">
+                            <!-- <a class="thumbnail pull-left" href="#"> <img class="media-object" src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 72px; height: 72px;"> </a> -->
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#"><%-product.item.title%></a></h4>
+                                <!-- <h5 class="media-heading"> by <a href="#">Brand name</a></h5> -->
+                                <!-- <span>Status: </span><span class="text-success"><strong>In Stock</strong></span> -->
+                            </div>
+                        </div></td>
+
+                        <form class="" action="/change/<%-product.item._id%>" method="get">
+                          <td class="col-sm-1 col-md-1" style="text-align: center">
+                          <input type="number" class="form-control" name= "change" id="exampleInputEmail1" value="<%-product.qty%>">
+                          <!-- <a href="#" class= "btn btn-primary btn-small"></a> -->
+                          </td>
+                          <td class="col-sm-1 col-md-1" style="text-align: center">
+                          <button type="submit" class= "btn btn-primary "><i class="fas fa-sync-alt"></i></button>
+                          </td>
+                        </form>
+
+
+                        <td class="col-sm-1 col-md-1 text-center"><strong><%-product.item.price%></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong><%-product.price%></strong></td>
+                        <td class="col-sm-1 col-md-1">
+                        <a href = "/delete/<%-product.item._id%>" type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </a></td>
+                      <%}%>
+                    </tr>
+                    <%}%>
+                    <tr>
+                        <td>   </td>
+                        <td>   </td>
+                        <td>   </td>
+                        <td><h3>Total</h3></td>
+                        <!-- <td class="text-right"><h3>Total Price : </h3></td> -->
+                        <td class="text-right"><h3><strong>₹<%-totalPrice%></strong></h3></td>
+                    </tr>
+                    <tr>
+                        <td>   </td>
+                        <td>   </td>
+                        <td>   </td>
+                        <td>
+                        <a href = "/" type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                        </a></td>
+                        <td>
+                        <a href="/checkout" type="button" class="btn btn-success">
+                            Checkout <span class="glyphicon glyphicon-play"></span>
+                        </a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
-  <%}%>
-
-  <div class="row">
-    <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-      <strong>Total : <%-totalPrice%></strong>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row">
-    <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
-      <a href = '/checkout' type = 'button' class="btn-success">Checkout</a>
-    </div>
-  </div>
-
-  <!-- <form action="/charge" method = "get">
-    <script src="https://checkout.stripe.com/checkout.js" class = 'stripe-button' data-key = "pk_test_9u3czOwOnB2gd2wpoFGZtQiL" data-amount= "<%-totalPrice%>" data-name = "cart-products" data-description = "this is cart products" data-locale = "auto" data-currency = "gbp">
-
-    </script>
-  </form> -->
+</div>
 
 <%}else{%>
+
   <div class="row">
     <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3">
       <h2>No Items in Cart</h2>
     </div>
   </div>
-<%}%>
-
-
+  <%}%>
 
 <% include ./partials/footer %>
